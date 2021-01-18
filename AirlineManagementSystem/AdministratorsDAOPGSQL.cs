@@ -1,11 +1,13 @@
 ﻿using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AirlineManagementSystem
 {
-    class CountryDAOPGSQL : ICountryDAO
+    class AdministratorsDAOPGSQL : IAdministratorsDAO
     {
         private string m_conn = "Host=localhost;Username=postgres;Password=MansorySam1993$$;Database=flights_booking_system";
         private bool GetOpenConnection(string conn)
@@ -26,7 +28,7 @@ namespace AirlineManagementSystem
 
         }
 
-        private static List<Dictionary<string, object>> Run_Country_Sp(string conn_string, string sp_name, NpgsqlParameter[] parameters)
+        private static List<Dictionary<string, object>> Run_Admin_Sp(string conn_string, string sp_name, NpgsqlParameter[] parameters)
         {
             List<Dictionary<string, object>> values = new List<Dictionary<string, object>>();
             try
@@ -60,58 +62,63 @@ namespace AirlineManagementSystem
 
             return values;
         }
-        public void Add(Country t)
+        public void Add(Administrators t)
         {
-            var res_sp_add = Run_Country_Sp(m_conn, "sp_add_countries", new NpgsqlParameter[]
+            var res_sp_add = Run_Admin_Sp(m_conn, "sp_add_admin", new NpgsqlParameter[]
             {
                 new NpgsqlParameter("id",t.ID),
-                new NpgsqlParameter("name",t.Name),
-                new NpgsqlParameter("code_name", t.CodeCountryName)
+                new NpgsqlParameter("first_name",t.FirstName),
+                new NpgsqlParameter("last_name", t.LastName),
+                new NpgsqlParameter("level", t.Level),
+                new NpgsqlParameter("user_id", t.UserID)
             });
         }
 
-        public Country Get(int id)
+        public Administrators Get(int id)
         {
-            Country country = new Country() 
+            Administrators admin = new Administrators()
             {
-                    ID = id
+                ID = id
             };
 
-            var res_sp_get = Run_Country_Sp(m_conn, "sp_get_country_by_id", new NpgsqlParameter[]
+            var res_sp_get = Run_Admin_Sp(m_conn, "sp_get_admin_by_id", new NpgsqlParameter[]
             {
-                new NpgsqlParameter("id",country)
+                new NpgsqlParameter("id",admin)
             });
-            
-            return country;
+
+            return admin;
         }
 
-        public IList<Country> GetAll()
+        public IList<Administrators> GetAll()
         {
-            //IList<Country> countries = new List<Dictionary<string, object>>();
-            //var res_sp_get = Run_Country_Sp(m_conn, "sp_get_country_by_id", new NpgsqlParameter[]
+            //IList<Administrators> admin = new List<Dictionary<string, object>>();
+            //var res_sp_get = Run_Admin_Sp(m_conn, "sp_get_all_administrator", new NpgsqlParameter[]
             //{
             //    new NpgsqlParameter()
             //});
-            //countries.Add(res_sp_get);
-            //return countries;
+            //admin.Add(res_sp_get);
+            //return admin;
             return null;
         }
 
-        public void Remove(Country t)
+        public void Remove(Administrators t)
         {
-            var res_sp_remove = Run_Country_Sp(m_conn, "sp_remove_country", new NpgsqlParameter[]
+            var res_sp_remove = Run_Admin_Sp(m_conn, "sp_remove_admin", new NpgsqlParameter[]
             {
                 new NpgsqlParameter("id",t.ID)
-            }); 
+            });
         }
 
-        public void Update(Country t)
+        public void Update(Administrators t)
         {
-            var res_sp_update = Run_Country_Sp(m_conn, "sp_update_name_code_country", new NpgsqlParameter[]
+            var res_sp_update = Run_Admin_Sp(m_conn, "sp_update_admin", new NpgsqlParameter[]
             {
                 new NpgsqlParameter("id",t.ID),
-                new NpgsqlParameter("name",t.Name),
-                new NpgsqlParameter("code_name", t.CodeCountryName)
+                new NpgsqlParameter("first_name",t.FirstName),
+                new NpgsqlParameter("last_name", t.LastName),
+                new NpgsqlParameter("level", t.Level),
+                new NpgsqlParameter("user_id", t.UserID)
+
             });
         }
     }

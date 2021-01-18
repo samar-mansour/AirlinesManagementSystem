@@ -15,13 +15,6 @@ namespace AirlineManagementSystem
 
         }
 
-        public Country(int id, string name, string codeCountryName)
-        {
-            ID = id;
-            Name = name;
-            CodeCountryName = codeCountryName;
-        }
-
         public static bool operator ==(Country country1, Country country2)
         {
             if ((country1 == null) && (country2 == null))
@@ -33,7 +26,7 @@ namespace AirlineManagementSystem
 
         public static bool operator !=(Country country1, Country country2)
         {
-            return (country1 == country2);
+            return !(country1 == country2);
         }
         public override bool Equals(object obj)
         {
