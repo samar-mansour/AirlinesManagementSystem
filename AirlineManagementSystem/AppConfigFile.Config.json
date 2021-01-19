@@ -1,0 +1,14 @@
+﻿{
+  "App": {
+    "ConnectionString": "Host=localhost;Username=postgres;Password=MansorySam1993$$;Database=flights_booking_system",
+    "AppName": "AirlineManagementSystem",
+    "Version": 2.5
+  },
+  "Logging": {
+    "LogLevel": { // All providers, LogLevel applies to all the enabled providers.
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Trace" // Debug:Microsoft.Hosting.Lifetime category.
+    }
+  }
+}
