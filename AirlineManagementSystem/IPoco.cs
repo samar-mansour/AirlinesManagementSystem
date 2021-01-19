@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AirlineManagementSystem
 {
-    interface IPoco
+    public interface IPoco
     {
     }
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace AirlineManagementSystem
 {
+    //Poco class that inherint IPoco interface
     class Administrators : IPoco
     {
         public int ID { get; set; }
@@ -19,6 +20,7 @@ namespace AirlineManagementSystem
 
         }
 
+        //operators to check if in any case there's equality between two defferent IDs or null records
         public static bool operator ==(Administrators admin1, Administrators admin2)
         {
             if ((admin1 == null) && (admin2 == null))
@@ -47,6 +49,7 @@ namespace AirlineManagementSystem
             return this.ID;
         }
 
+        //using json to print all the properties of this class --> from Newtonsoft nuget
         public override string ToString()
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(this);

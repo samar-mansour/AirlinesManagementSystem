@@ -4,8 +4,10 @@ using System.Text;
 
 namespace AirlineManagementSystem
 {
+    //Poco class that implement IPoco Interface 
     class Country: IPoco
     {
+        //country data properties 
         public int ID { get; set; }
         public string Name { get; set; }
         public string CodeCountryName { get; set; }
@@ -15,6 +17,7 @@ namespace AirlineManagementSystem
 
         }
 
+        //operators to check if in any case there's equality between two defferent IDs or null records
         public static bool operator ==(Country country1, Country country2)
         {
             if ((country1 == null) && (country2 == null))
@@ -43,6 +46,7 @@ namespace AirlineManagementSystem
             return this.ID;
         }
 
+        //using json to print all the properties of this class
         public override string ToString()
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(this);
