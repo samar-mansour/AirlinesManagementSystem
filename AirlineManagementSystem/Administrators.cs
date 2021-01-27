@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace AirlineManagementSystem
 {
     //Poco class that inherint IPoco interface
-    class Administrators : IPoco
+    public class Administrators : IPoco, IUser
     {
         public int ID { get; set; }
         public string FirstName { get; set; }

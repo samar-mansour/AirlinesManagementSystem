@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AirlineManagementSystem
 {
-    public interface IUser
+    public interface IUsersDAO : IBasicDb<Users>
     {
     }
 }

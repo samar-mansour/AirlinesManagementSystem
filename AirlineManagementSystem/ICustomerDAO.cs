@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace AirlineManagementSystem
 {
-    public interface IUser
+    public interface ICustomerDAO: IBasicDb<Customer>
     {
+        Customer GetCustomerByUsername(string name);
     }
 }

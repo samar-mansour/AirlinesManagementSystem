@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AirlineManagementSystem
 {
-    interface IAdministratorsDAO : IBasicDb<Administrators>
+    public interface IAdministratorsDAO : IBasicDb<Administrators>
     {
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 namespace AirlineManagementSystem
 {
     //Poco class that implement IPoco Interface 
-    class Country: IPoco
+    public class Country: IPoco
     {
         //country data properties 
         public int ID { get; set; }
