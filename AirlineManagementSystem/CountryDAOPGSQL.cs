@@ -26,6 +26,7 @@ namespace AirlineManagementSystem
         //Returning country record accourding to giving id from the user
         public Country Get(int id)
         {
+            GetOpenConnection(m_conn);
             Country country = new Country() 
             {
                     ID = id
