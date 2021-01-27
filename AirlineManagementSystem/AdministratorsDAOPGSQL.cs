@@ -30,7 +30,6 @@ namespace AirlineManagementSystem
         //Returning adminstrator record depends on giving id --> using the Run_Admin_SP() function
         public Administrators Get(int id)
         {
-            GetOpenConnection(m_conn);
             Administrators admin = new Administrators()
             {
                 ID = id
