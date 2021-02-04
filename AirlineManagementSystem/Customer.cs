@@ -10,7 +10,7 @@ namespace AirlineManagementSystem
     {
         public int ID { get; set; }
         public string FirstName { get; set; }
-        public string LasttName { get; set; }
+        public string LastName { get; set; }
         public string Address { get; set; }
         public string PhoneNo { get; set; }
         public string CreditCardNo { get; set; }

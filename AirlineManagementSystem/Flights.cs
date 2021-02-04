@@ -9,7 +9,7 @@ namespace AirlineManagementSystem
     public class Flights: IPoco
     {
         public int ID { get; set; }
-        public int AirlineCompId { get; set; }
+        public long AirlineCompId { get; set; }
         public int OriginCountryId { get; set; }
         public int DestinationCountryId { get; set; }
         public DateTime DepartureTime { get; set; }

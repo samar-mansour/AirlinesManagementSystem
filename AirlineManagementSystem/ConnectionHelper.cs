@@ -1,4 +1,5 @@
-﻿using Npgsql;
+﻿using Microsoft.Extensions.Logging;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,9 @@ namespace AirlineManagementSystem
     public abstract class ConnectionHelper
     {
         public string m_conn = AppConfigFile.GetInstance().ConnectionString;
-        private static readonly log4net.ILog my_logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+        //Log not working --> giving argument null exception!!!!!!
+        ///private static readonly ILogger my_logger;
 
         public static bool TestConnection(string conn)
         {
@@ -22,9 +25,10 @@ namespace AirlineManagementSystem
                     return true;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)// ex)
             {
-                my_logger.Error($"Failed! can connect to database: {ex}");
+                //my_logger.LogDebug($"Failed! can connect to database: {ex}");
+                //my_logger.Log(LogLevel.Critical, "Test Connection DB: {conn} Failed", conn);
                 return false;
             }
         }
@@ -42,9 +46,9 @@ namespace AirlineManagementSystem
                     {
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
-                        cmd.Parameters.Add(parameters);
+                        cmd.Parameters.AddRange(parameters); 
 
-                        var reader = cmd.ExecuteReader();
+                        NpgsqlDataReader reader = cmd.ExecuteReader();
                         while (reader.Read())
                         {
                             Dictionary<string, object> row = new Dictionary<string, object>();
@@ -59,13 +63,16 @@ namespace AirlineManagementSystem
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception )//ex
             {
-                my_logger.Error($"Failed to {sp_name} into/from database. Error : {ex}");
-                my_logger.Debug($"Run_Country_Sp: [{sp_name}]");
+                //my_logger.LogError($"Failed to {sp_name} into/from database. Error : {ex}");
+                //my_logger.LogDebug($"Stored procedure name: [{sp_name}]");
+                //my_logger.Log(LogLevel.Critical, "Stored Procedure DB: {sp_name} Failed", sp_name);
                 Console.WriteLine($"Function {sp_name} failed. parameters: {string.Join(",", parameters.Select(_ => _.ParameterName + " : " + _.Value))}");
             }
             return values;
         }
+
+
     }
 }

@@ -7,101 +7,76 @@ using System.Threading.Tasks;
 
 namespace AirlineManagementSystem
 {
-    // This class using stored procedures from postgerSQL. Also inherit two interfaces:
-    //one have all the methods of administratorDAO, the other interface checks the connection to the data
+    // This class using stored procedures from postgerSQL. Also inherit helper class and interface.
     public class AdministratorsDAOPGSQL : ConnectionHelper, IAdministratorsDAO
-    {
-        private static readonly log4net.ILog my_logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        
+    {        
 
-        //Adding new administrator record to the database --> using the Run_Admin_SP() function
         public void Add(Administrators t)
         {
             var res_sp_add = Run_Sp(m_conn, "sp_add_admin", new NpgsqlParameter[]
             {
-                new NpgsqlParameter("id",t.ID),
-                new NpgsqlParameter("first_name",t.FirstName),
-                new NpgsqlParameter("last_name", t.LastName),
-                new NpgsqlParameter("level", t.Level),
-                new NpgsqlParameter("user_id", t.UserID)
+                new NpgsqlParameter("_admin_name",t.FirstName),
+                new NpgsqlParameter("_admin_surname", t.LastName),
+                new NpgsqlParameter("_admin_level", t.Level),
+                new NpgsqlParameter("_userid", t.UserID)
             });
+            Console.WriteLine($"New Adminstrator added successfully => [{res_sp_add}]");
         }
 
-        //Returning adminstrator record depends on giving id --> using the Run_Admin_SP() function
         public Administrators Get(int id)
         {
-            Administrators admin = new Administrators()
-            {
-                ID = id
-            };
+            Administrators admin = new Administrators();
             var res_sp_get = Run_Sp(m_conn, "sp_get_admin_by_id", new NpgsqlParameter[]
             {
-                new NpgsqlParameter("id",admin)
+                new NpgsqlParameter("a_id", id)
             });
-
+            if (res_sp_get != null)
+            {
+                admin.ID = id;
+            }
             return admin;
         }
 
-        //Returning function as a administrator list --> Reading all the record from the database
-        //using the Run_Admin_SP() function
+
         public IList<Administrators> GetAll()
         {
             IList<Administrators> admin = new List<Administrators>();
-            
-            using (var conn = new NpgsqlConnection(m_conn))
-            {
-                conn.Open();
-                try
-                {
-                    using (NpgsqlCommand cmd = new NpgsqlCommand("sp_get_all_administrator", conn))
-                    {
-                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            Administrators reader = new Administrators();
 
-                        var reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            admin.Add(
-                                new Administrators
-                                {
-                                    ID = Convert.ToInt32(reader["id"]),
-                                    FirstName = reader["first_name"].ToString(),
-                                    LastName = reader["last_name"].ToString(),
-                                    Level = Convert.ToInt32(reader["level"]),
-                                    UserID = Convert.ToInt32(reader["user_id"])
-                                });
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    my_logger.Debug($"Failed to get all administrator records. Error : {ex}");
-                    my_logger.Info($"GetAll: [sp_get_all_administrator]");
-                }
-                return admin;
-            }
+            var res_sp_get_all = Run_Sp(m_conn, "sp_get_all_administrator", new NpgsqlParameter[]
+            {
+                new NpgsqlParameter("first_name", reader.FirstName),
+                new NpgsqlParameter("last_name",reader.LastName),
+                new NpgsqlParameter("level",reader.Level),
+                new NpgsqlParameter("user_id",reader.UserID)
+
+            });
+            admin = (IList<Administrators>)res_sp_get_all.Select(item => item.Values).ToList();
+            return admin;
         }
 
-        //Removing record from the data depending on the giving id --> using the Run_Admin_SP() function
         public void Remove(Administrators t)
         {
             var res_sp_remove = Run_Sp(m_conn, "sp_remove_admin", new NpgsqlParameter[]
             {
                 new NpgsqlParameter("id",t.ID)
             });
+            Console.WriteLine($"Run_Sp_Remove => {res_sp_remove} was removed successfully");
         }
 
-        //Updating administrator data record --> using the Run_Admin_SP() function
         public void Update(Administrators t)
         {
+            Console.Write("Enter user ID to update information: ");
+            int newID = Convert.ToInt32(Console.ReadLine());
             var res_sp_update = Run_Sp(m_conn, "sp_update_admin", new NpgsqlParameter[]
             {
-                new NpgsqlParameter("id",t.ID),
-                new NpgsqlParameter("first_name",t.FirstName),
-                new NpgsqlParameter("last_name", t.LastName),
-                new NpgsqlParameter("level", t.Level),
-                new NpgsqlParameter("user_id", t.UserID)
-
+                new NpgsqlParameter("_admin_name",t.FirstName),
+                new NpgsqlParameter("_admin_surname", t.LastName),
+                new NpgsqlParameter("_admin_level", t.Level),
+                new NpgsqlParameter("_userID", t.UserID),
+                new NpgsqlParameter("new_id", newID)
             });
+            Console.WriteLine($"Successfully Updated users information => [{res_sp_update}]");
         }
     }
 }
