@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AirlineManagementSystem
 {
-    public class AirlineCompany: IPoco
+    public class AirlineCompany: IPoco,IUser
     {
         public int ID { get; set; }
         public string Name { get; set; }
