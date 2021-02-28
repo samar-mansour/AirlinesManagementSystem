@@ -2,13 +2,14 @@
 using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AirlineManagementSystem
 {
-    public abstract class ConnectionHelper
+    public abstract class ConnectionDataInfo
     {
         public string m_conn = AppConfigFile.GetInstance().ConnectionString;
 
@@ -33,7 +34,6 @@ namespace AirlineManagementSystem
             }
         }
 
-        //Returning data function as list contaning a dictionary --> runs any stored procedure from database. 
         public static List<Dictionary<string, object>> Run_Sp(string conn_string, string sp_name, NpgsqlParameter[] parameters)
         {
             List<Dictionary<string, object>> values = new List<Dictionary<string, object>>();
@@ -46,7 +46,7 @@ namespace AirlineManagementSystem
                     {
                         cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
-                        cmd.Parameters.AddRange(parameters); 
+                        cmd.Parameters.AddRange(parameters);
 
                         NpgsqlDataReader reader = cmd.ExecuteReader();
                         while (reader.Read())
@@ -63,7 +63,7 @@ namespace AirlineManagementSystem
                     }
                 }
             }
-            catch (Exception )//ex
+            catch (Exception)//ex
             {
                 //my_logger.LogError($"Failed to {sp_name} into/from database. Error : {ex}");
                 //my_logger.LogDebug($"Stored procedure name: [{sp_name}]");
@@ -72,7 +72,5 @@ namespace AirlineManagementSystem
             }
             return values;
         }
-
-
     }
 }

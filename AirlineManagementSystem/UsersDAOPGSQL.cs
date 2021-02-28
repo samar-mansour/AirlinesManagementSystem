@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AirlineManagementSystem
 {
-    public class UsersDAOPGSQL : ConnectionHelper, IUsersDAO
+    public class UsersDAOPGSQL : ConnectionDataInfo, IUsersDAO
     {
         public void Add(Users t)
         {
@@ -49,6 +49,19 @@ namespace AirlineManagementSystem
             });
             ticket = (IList<Users>)res_sp_get_all.Select(item => item.Values).ToList();
             return ticket;
+        }
+
+        public Users GetUserByUsername(string name)
+        {
+            List<Users> usersList = new List<Users>();
+            Users user = new Users();
+            var res_sp_get_username = Run_Sp(m_conn, "sp_get_by_username", new NpgsqlParameter[]
+            {
+                new NpgsqlParameter("_username", name)
+            });
+            usersList.AddRange((IEnumerable<Users>)res_sp_get_username);
+            user = (Users)usersList.Select(a => res_sp_get_username);
+            return user;
         }
 
         public void Remove(Users t)

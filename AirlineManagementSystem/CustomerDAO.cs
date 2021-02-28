@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AirlineManagementSystem
 {
-    public class CustomerDAO : ConnectionHelper, ICustomerDAO
+    public class CustomerDAO : ConnectionDataInfo, ICustomerDAO
     {
         public void Add(Customer t)
         {
@@ -62,10 +62,9 @@ namespace AirlineManagementSystem
             Customer customer = new Customer();
             List<Customer> customerList = new List<Customer>();
 
-            Users user = new Users();
             var res_sp_get_customer_username = Run_Sp(m_conn, "sp_get_customer_by_username", new NpgsqlParameter[]
             {
-                new NpgsqlParameter("_username", user.Username)
+                new NpgsqlParameter("_username", name)
             });
             customerList.AddRange((IEnumerable<Customer>)res_sp_get_customer_username);
             customer = (Customer)customerList.Select(a => res_sp_get_customer_username);

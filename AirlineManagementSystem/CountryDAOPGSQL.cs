@@ -8,7 +8,7 @@ namespace AirlineManagementSystem
 {
     // This class using stored procedures from postgerSQL. Also inherit two interfaces:
     //one have all the methods of ICountryDAO, the other interface checks the connection to the data
-    public class CountryDAOPGSQL : ConnectionHelper, ICountryDAO
+    public class CountryDAOPGSQL : ConnectionDataInfo, ICountryDAO
     {
         public void Add(Country t)
         {
@@ -51,6 +51,18 @@ namespace AirlineManagementSystem
 
         }
 
+        public Users GetUserByUsername(string name)
+        {
+            List<Users> usersList = new List<Users>();
+            Users user = new Users();
+            var res_sp_get_country_username = Run_Sp(m_conn, "sp_get_country_username", new NpgsqlParameter[]
+            {
+                new NpgsqlParameter("_username", name)
+            });
+            usersList.AddRange((IEnumerable<Users>)res_sp_get_country_username);
+            user = (Users)usersList.Select(a => res_sp_get_country_username);
+            return user;
+        }
 
         public void Remove(Country t)
         {

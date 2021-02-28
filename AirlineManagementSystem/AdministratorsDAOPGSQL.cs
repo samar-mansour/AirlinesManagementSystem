@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace AirlineManagementSystem
 {
     // This class using stored procedures from postgerSQL. Also inherit helper class and interface.
-    public class AdministratorsDAOPGSQL : ConnectionHelper, IAdministratorsDAO
+    public class AdministratorsDAOPGSQL : ConnectionDataInfo, IAdministratorsDAO
     {        
 
         public void Add(Administrators t)
@@ -20,20 +20,20 @@ namespace AirlineManagementSystem
                 new NpgsqlParameter("_admin_level", t.Level),
                 new NpgsqlParameter("_userid", t.UserID)
             });
-            Console.WriteLine($"New Adminstrator added successfully => [{res_sp_add}]");
+            res_sp_add.ForEach(admin => Console.WriteLine($"New administrator: [{admin}] has been added successfully "));
         }
 
         public Administrators Get(int id)
         {
+            List<Administrators> adminlist = new List<Administrators>();
             Administrators admin = new Administrators();
+
             var res_sp_get = Run_Sp(m_conn, "sp_get_admin_by_id", new NpgsqlParameter[]
             {
                 new NpgsqlParameter("a_id", id)
             });
-            if (res_sp_get != null)
-            {
-                admin.ID = id;
-            }
+            adminlist.AddRange((IEnumerable<Administrators>)res_sp_get.ToList());
+            admin = (Administrators)adminlist.Select(a => a);
             return admin;
         }
 
@@ -51,8 +51,21 @@ namespace AirlineManagementSystem
                 new NpgsqlParameter("user_id",reader.UserID)
 
             });
-            admin = (IList<Administrators>)res_sp_get_all.Select(item => item.Values).ToList();
+            admin = (IList<Administrators>)res_sp_get_all.SelectMany(item => item.Values).ToList();
             return admin;
+        }
+
+        public Users GetUserByUsername(string name)
+        {
+            List<Users> usersList = new List<Users>();
+            Users user = new Users();
+            var res_sp_get_username = Run_Sp(m_conn, "sp_get_admin_username", new NpgsqlParameter[]
+            {
+                new NpgsqlParameter("_username", name)
+            });
+            usersList.AddRange((IEnumerable<Users>)res_sp_get_username);
+            user = (Users)usersList.Select(a => res_sp_get_username);
+            return user;
         }
 
         public void Remove(Administrators t)

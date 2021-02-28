@@ -8,5 +8,6 @@ namespace AirlineManagementSystem
 {
     public interface IAdministratorsDAO : IBasicDb<Administrators>
     {
+        Users GetUserByUsername(string name);
     }
 }

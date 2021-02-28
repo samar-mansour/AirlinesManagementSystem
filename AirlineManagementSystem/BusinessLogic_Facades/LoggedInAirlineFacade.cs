@@ -4,44 +4,103 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+/// <summary>
+/// class that gives the airline companies ability to change setting and flight info
+/// create new exceptions
+/// i use logger in each function
+/// </summary>
 namespace AirlineManagementSystem.BusinessLogic_Facades
 {
     public class LoggedInAirlineFacade : AnonymousUserFacade, ILoggedInAirlineFacade
     {
         public void CancelFlight(LoginToken<AirlineCompany> token, Flights flight)
         {
-            throw new NotImplementedException();
+            if (token != null)
+            {
+                if ((token.User.ID).Equals(flight.AirlineCompId))
+                {
+                    _flightDAO.Remove(flight);
+                }
+                throw new FlightNotExistsException($"Flight not exists: {token.User.ID}");
+            }
+            //logger
         }
 
         public void ChangeMyPassword(LoginToken<AirlineCompany> token, string oldPassword, string newPassword)
         {
-            throw new NotImplementedException();
+            Users users = new Users();
+            if (token != null)
+            {
+                if ((token.User.UserId).Equals(users.ID))
+                {
+                    if (users.Password == oldPassword)
+                    {
+                        users.Password = newPassword;
+                        _userDAO.Update(users);
+                    };
+                }
+            }
+            //logger
         }
 
         public void CreateFlight(LoginToken<AirlineCompany> token, Flights flight)
         {
-            throw new NotImplementedException();
+            if (token != null)
+            {
+                if (!(token.User.ID).Equals(flight.AirlineCompId))
+                {
+                    _flightDAO.Add(flight);
+                }
+                throw new FlightAlreadyExistsException($"Cannot create the flight: {flight.ID}. Flight is already exists");
+            }
         }
 
         public IList<Tickets> GetAllFlights(LoginToken<AirlineCompany> token)
         {
-            throw new NotImplementedException();
+            Tickets t = new Tickets();
+            if (token != null)
+            {
+                if ((token.User.ID).Equals(t.FlightID))
+                {
+                   return _ticketDAO.GetAll();
+                }
+            }
+            return null;
         }
 
+        //is it an typo error!  so i guess it's get by id 
         public IList<Tickets> GetAllTickets(LoginToken<AirlineCompany> token)
         {
-            throw new NotImplementedException();
+            List<Tickets> tickets = new List<Tickets>();
+            Tickets t = new Tickets();
+            if (token != null)
+            {
+                if ((token.User.ID).Equals(t.FlightID))
+                {
+                    tickets.Add(_ticketDAO.Get(t.ID));
+                    return tickets;
+                }
+            }
+            return null;
         }
 
         public void ModifyAirlineDetails(LoginToken<AirlineCompany> token, AirlineCompany airline)
         {
-            throw new NotImplementedException();
+            if (token != null)
+            {
+                _airlineDAO.Update(airline);
+            }
         }
 
         public void UpdateFlight(LoginToken<AirlineCompany> token, Flights flight)
         {
-            throw new NotImplementedException();
+            if (token != null)
+            {
+                if ((token.User.ID).Equals(flight.AirlineCompId))
+                {
+                    _flightDAO.Update(flight);
+                }
+            }
         }
     }
 }

@@ -6,5 +6,6 @@ namespace AirlineManagementSystem
 {
     public interface ICountryDAO : IBasicDb<Country>
     {
+        Users GetUserByUsername(string name);
     }
 }

@@ -12,7 +12,7 @@ namespace AirlineManagementSystem.BusinessLogic_Facades
         protected ICountryDAO _countryDAO;
         protected ICustomerDAO _customerDAO;
         protected IAdministratorsDAO _adminDAO;
-        protected IUser _userDAO;
+        protected IUsersDAO _userDAO;
         protected IFlightDAO _flightDAO;
         protected ITicketsDAO _ticketDAO;
     }

@@ -10,42 +10,54 @@ namespace AirlineManagementSystem.BusinessLogic_Facades
     {
         public IList<AirlineCompany> GetAllAirlineCompanies()
         {
-            throw new NotImplementedException();
+            return _airlineDAO.GetAll();
         }
 
         public Dictionary<Flights, int> GetAllFlightVacancy()
         {
-            throw new NotImplementedException();
+            return _flightDAO.GetAllFlightsVacancy();
         }
 
         public Flights GetFlightById(int id)
         {
-            throw new NotImplementedException();
+            if (id < 0)
+            {
+                throw new NegativeIdException($"ID cannot be negative: {id}");
+            }
+            return _flightDAO.GetFlightById(id);
         }
 
         public IList<Flights> GetFlights()
         {
-            throw new NotImplementedException();
+            return _flightDAO.GetAll();
         }
 
         public IList<Flights> GetFlightsByDepatrureDate(DateTime departureDate)
         {
-            throw new NotImplementedException();
+            return _flightDAO.GetFlightsByDepatrureDate(departureDate);
         }
 
         public IList<Flights> GetFlightsByDestinationCountry(int countryCode)
         {
-            throw new NotImplementedException();
+            if (countryCode < 0)
+            {
+                throw new NegativeIdException($"Country code cannot be negative: {countryCode}");
+            }
+            return _flightDAO.GetFlightsByDestinationCountry(countryCode);
         }
 
         public IList<Flights> GetFlightsByLandingDate(DateTime landingDate)
         {
-            throw new NotImplementedException();
+            return _flightDAO.GetFlightsByLandingDate(landingDate);
         }
 
         public IList<Flights> GetFlightsByOriginCountry(int countryCode)
         {
-            throw new NotImplementedException();
+            if (countryCode < 0)
+            {
+                throw new NegativeIdException($"Country code cannot be negative: {countryCode}");
+            }
+            return _flightDAO.GetFlightsByOriginCountry(countryCode);
         }
     }
 }

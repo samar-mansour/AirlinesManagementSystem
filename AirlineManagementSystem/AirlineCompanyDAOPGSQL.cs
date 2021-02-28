@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AirlineManagementSystem
 {
-    public class AirlineCompanyDAOPGSQL : ConnectionHelper, IAirlineCompanyDAO
+    public class AirlineCompanyDAOPGSQL : ConnectionDataInfo, IAirlineCompanyDAO
     {
         public void Add(AirlineCompany t)
         {

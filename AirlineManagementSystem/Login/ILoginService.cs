@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AirlineManagementSystem.BusinessLogic_Facades;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace AirlineManagementSystem.Login
 {
     public interface ILoginService
     {
-        bool TryLogin(string userName, string password, out LoginToken<IUser> token);
+        bool TryLogin(string userName, string password, out LoginToken<IUser> token, out FacadeBase facadeBase);
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AirlineManagementSystem
 {
-    public class FlightsDAOPGSQL : ConnectionHelper, IFlightDAO
+    public class FlightsDAOPGSQL : ConnectionDataInfo, IFlightDAO
     {
         public void Add(Flights t)
         {
@@ -74,8 +74,8 @@ namespace AirlineManagementSystem
                 new NpgsqlParameter("landingTime", reader.LandingTime),
                 new NpgsqlParameter("remainingTickets", reader.RemainingTickets)
                 });
-                flight.Add(sp_get_all_flight_vacancy.ForEach(value => sp_get_all_flight_vacancy), reader.ID);
-                reader = (Flights)flight.Select(a => sp_get_all_flight_vacancy);
+                //flight.Add(sp_get_all_flight_vacancy.ForEach(value => value), reader.ID);
+                //reader = (Flights)flight.Select(a => sp_get_all_flight_vacancy);
             }
             else
             {
@@ -90,12 +90,12 @@ namespace AirlineManagementSystem
             List<Flights> flightList = new List<Flights>();
 
             Customer customer = new Customer();
-            var res_flight_by_customerID = Run_Sp(m_conn, "sp_get_flight_by_customer", new NpgsqlParameter[]
+            var res_flight_by_ID = Run_Sp(m_conn, "sp_get_ticket_flight_by_id", new NpgsqlParameter[]
             {
-                new NpgsqlParameter("customer", customer.FirstName)
+                new NpgsqlParameter("_id", id)
             });
-            flightList.AddRange((IEnumerable<Flights>)res_flight_by_customerID);
-            flight = (Flights)flightList.Select(a => res_flight_by_customerID);
+            flightList.AddRange((IEnumerable<Flights>)res_flight_by_ID);
+            flight = (Flights)flightList.Select(a => res_flight_by_ID);
             return flight;
         }
 
@@ -104,10 +104,9 @@ namespace AirlineManagementSystem
             IList<Flights> flight = new List<Flights>();
             Customer reader = new Customer();
 
-            var res_flight_by_customer = Run_Sp(m_conn, "res_flight_by_customer", new NpgsqlParameter[]
+            var res_flight_by_customer = Run_Sp(m_conn, "sp_flight_by_customer", new NpgsqlParameter[]
             {
-                new NpgsqlParameter("_id", reader.ID)
-
+                new NpgsqlParameter("customer", customer)
             });
             flight = (IList<Flights>)res_flight_by_customer.Select(item => item.Values).ToList();
             return flight;
