@@ -46,7 +46,9 @@ namespace AirlineManagementSystem.Login
 
         public bool TryLogin(string userName, string password, out LoginToken<IUser> token, out FacadeBase facadeBase)
         {
-            Users users = new Users();
+            Users user = new Users();
+            token = null;
+            facadeBase = null;
 
             if (userName is null)
                 throw new ArgumentNullException($"username cannot be: {userName}");
@@ -58,33 +60,74 @@ namespace AirlineManagementSystem.Login
             {
                 if (_adminDAO.GetUserByUsername(userName).Equals(_userDAO.GetUserByUsername(userName)))
                 {
-                    if (users.Password == password)
+                    if (user.Password == password)
                     {
-                        token = new LoginToken<Administrators> 
-                        { 
-                            User = new Administrators() 
-                            { 
-                                FirstName = "admin",
-                                Level = 4 
-                            } 
-                        };
+                        //need to add logger
+                        token = new LoginToken<Administrators>();
                         facadeBase = new LoggedInAdministratorFacade();
                         return true;
                     }
                 }
-                
-            }
 
-            if (UserAuthentication.IsUserAuthorized(userName, password))
+            }
+            else
             {
-                if (token.User is LoginToken<Customer>)
+                //need to add logger
+                if (UserAuthentication.IsUserAuthorized(userName, password))
                 {
-
+                    if (user.UserRole == 1)
+                    {
+                        Administrators admin = _adminDAO.Get(user.ID);
+                        token = new LoginToken<Administrators>()
+                        {
+                            User = admin
+                        };
+                        facadeBase = new LoggedInAdministratorFacade();
+                        return true;
+                    }
+                    else if (user.UserRole == 2)
+                    {
+                        Administrators admin = _adminDAO.Get(user.ID);
+                        token = new LoginToken<Administrators>()
+                        {
+                            User = admin
+                        };
+                        facadeBase = new LoggedInAdministratorFacade();
+                        return true;
+                    }
+                    else if (user.UserRole == 3)
+                    {
+                        Administrators admin = _adminDAO.Get(user.ID);
+                        token = new LoginToken<Administrators>()
+                        {
+                            User = admin
+                        };
+                        facadeBase = new LoggedInAdministratorFacade();
+                        return true;
+                    }
+                    else if (user.ID.Equals(_customerDAO.Get(user.ID)))
+                    {
+                        Customer customer = _customerDAO.Get(user.ID);
+                        token = new LoginToken<Customer>()
+                        {
+                            User = customer
+                        };
+                        facadeBase = new LoggedInCustomerFacade();
+                        return true;
+                    }
+                    else
+                    {
+                        AirlineCompany airline = _airlineDAO.Get(user.ID);
+                        token = new LoginToken<AirlineCompany>()
+                        {
+                            User = airline
+                        };
+                        facadeBase = new LoggedInAirlineFacade();
+                        return true;
+                    }
                 }
-                token = ; 
-                return true;
             }
-            token = null;
+            //need to add logger if it fails
             return false;
         }
     }

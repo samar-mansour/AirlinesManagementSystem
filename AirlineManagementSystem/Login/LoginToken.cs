@@ -10,11 +10,29 @@ namespace AirlineManagementSystem.Login
     {
         public T User { get; set; }
 
-        public static implicit operator LoginToken<T>(LoginToken<Administrators> v)
+        public static implicit operator LoginToken<T>(LoginToken<Administrators> admin)
         {
-            if (v != null)
+            if (admin != null)
             {
-                return v;
+                return admin;
+            }
+            return null;
+        }
+
+        public static implicit operator LoginToken<T>(LoginToken<Customer> cutomer)
+        {
+            if (cutomer != null)
+            {
+                return cutomer;
+            }
+            return null;
+        }
+
+        public static implicit operator LoginToken<T>(LoginToken<AirlineCompany> airline)
+        {
+            if (airline != null)
+            {
+                return airline;
             }
             return null;
         }
