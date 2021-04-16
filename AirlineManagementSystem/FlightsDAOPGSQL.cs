@@ -9,20 +9,33 @@ namespace AirlineManagementSystem
 {
     public class FlightsDAOPGSQL : ConnectionDataInfo, IFlightDAO
     {
+
         public void Add(Flights t)
         {
-            var res_sp_add = Run_Sp(m_conn, "sp_add_flights", new NpgsqlParameter[]
+            try
             {
+                var res_sp_add = Run_Sp(m_conn, "sp_add_flights", new NpgsqlParameter[]
+                {
                 new NpgsqlParameter("_airlineID", t.AirlineCompId),
                 new NpgsqlParameter("_originCountry", t.OriginCountryId),
                 new NpgsqlParameter("_destinationCountry", t.DestinationCountryId),
                 new NpgsqlParameter("_departureTime", t.DepartureTime),
                 new NpgsqlParameter("_landingTime", t.LandingTime),
                 new NpgsqlParameter("_remainingTickets", t.RemainingTickets)
-            });
-            if (res_sp_add != null)
-                t.RemainingTickets--;
-            Console.WriteLine($"Added new flight successfully");
+                });
+                if (res_sp_add != null && t.RemainingTickets > 0)
+                    t.RemainingTickets--;
+                else
+                {
+                    Console.WriteLine($"Sorry, there's no remaining tickects: [Remaining Tickets: {t.RemainingTickets}]");
+                }
+                Console.WriteLine($"Added new flight successfully");
+            }
+            catch (Exception ex)
+            {
+                my_logger.Info($"Error {ex}! flight [flight ID: {t.ID}] cannot be added twice");
+            }
+            
         }
 
         public Flights Get(int id)
@@ -74,8 +87,8 @@ namespace AirlineManagementSystem
                 new NpgsqlParameter("landingTime", reader.LandingTime),
                 new NpgsqlParameter("remainingTickets", reader.RemainingTickets)
                 });
-                //flight.Add(sp_get_all_flight_vacancy.ForEach(value => value), reader.ID);
-                //reader = (Flights)flight.Select(a => sp_get_all_flight_vacancy);
+                //flight.Add(sp_get_all_flight_vacancy.AddRange(), reader.ID);
+                reader = (Flights)flight.Select(a => sp_get_all_flight_vacancy);
             }
             else
             {
@@ -158,11 +171,18 @@ namespace AirlineManagementSystem
 
         public void Remove(Flights t)
         {
-            var res_sp_remove = Run_Sp(m_conn, "sp_remove_flight", new NpgsqlParameter[]
+            try
+            {
+                var res_sp_remove = Run_Sp(m_conn, "sp_remove_flight", new NpgsqlParameter[]
             {
                 new NpgsqlParameter("f_id",t.ID)
             });
-            Console.WriteLine($"{t.ID} was successfully removed");
+                Console.WriteLine($"{t.ID} was successfully removed");
+            }
+            catch (Exception ex)
+            {
+                my_logger.Info($"Error {ex}, Flight ID: {t.ID} not existed");
+            }
         }
 
         public void Update(Flights t)

@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirlineManagementSystem", "AirlineManagementSystem\AirlineManagementSystem.csproj", "{0C23C5E5-D1D8-45AD-BF31-4EDD3E717DA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppAirlineSolution", "ConsoleAppAirlineSolution\ConsoleAppAirlineSolution.csproj", "{863549DA-96B6-4FFD-BBBB-0D83F8ACE833}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleAppAirlineSolution", "ConsoleAppAirlineSolution\ConsoleAppAirlineSolution.csproj", "{863549DA-96B6-4FFD-BBBB-0D83F8ACE833}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirlineManagementSystem.Test", "AirlineManagementSystem.Test\AirlineManagementSystem.Test.csproj", "{A8D4C10D-AF82-407A-BB66-41BA4A7DDA61}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{863549DA-96B6-4FFD-BBBB-0D83F8ACE833}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{863549DA-96B6-4FFD-BBBB-0D83F8ACE833}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{863549DA-96B6-4FFD-BBBB-0D83F8ACE833}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8D4C10D-AF82-407A-BB66-41BA4A7DDA61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8D4C10D-AF82-407A-BB66-41BA4A7DDA61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8D4C10D-AF82-407A-BB66-41BA4A7DDA61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8D4C10D-AF82-407A-BB66-41BA4A7DDA61}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

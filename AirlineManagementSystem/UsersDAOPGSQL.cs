@@ -11,14 +11,22 @@ namespace AirlineManagementSystem
     {
         public void Add(Users t)
         {
-            var res_sp_add = Run_Sp(m_conn, "sp_add_user", new NpgsqlParameter[]
+            try
+            {
+                var res_sp_add = Run_Sp(m_conn, "sp_add_user", new NpgsqlParameter[]
             {
                 new NpgsqlParameter("_username", t.Username),
                 new NpgsqlParameter("_pass", t.Password),
                 new NpgsqlParameter("_email", t.Email),
                 new NpgsqlParameter("_userRole", t.UserRole)
             });
-            res_sp_add.ForEach(user => Console.WriteLine($"New [{user}] has added successfully "));
+                res_sp_add.ForEach(user => Console.WriteLine($"New [{user}] has added successfully"));
+            }
+            catch (Exception ex)
+            {
+                my_logger.Info($"Cannot add user twice {ex}.\nUser: [ID: {t.ID}, username: {t.Username}] already exist");
+            }
+            
         }
 
         public Users Get(int id)

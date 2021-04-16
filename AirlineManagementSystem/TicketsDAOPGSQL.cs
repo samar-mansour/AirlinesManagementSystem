@@ -11,12 +11,20 @@ namespace AirlineManagementSystem
     {
         public void Add(Tickets t)
         {
-            var res_sp_add = Run_Sp(m_conn, "sp_add_tickets", new NpgsqlParameter[]
+            try
             {
+                var res_sp_add = Run_Sp(m_conn, "sp_add_tickets", new NpgsqlParameter[]
+                {
                 new NpgsqlParameter("_flight_id", t.FlightID),
                 new NpgsqlParameter("_customer_id", t.CustomerID)
-            });
-            res_sp_add.ForEach(ticket => Console.WriteLine($"New [{ticket}] has added successfully "));
+                });
+                res_sp_add.ForEach(ticket => Console.WriteLine($"New [{ticket}] has added successfully "));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex}. Cannot add a ticket with same ID number: {t.ID}");
+            }
+            
         }
 
         public Tickets Get(int id)

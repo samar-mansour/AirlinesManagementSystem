@@ -7,20 +7,28 @@ using System.Threading.Tasks;
 
 namespace AirlineManagementSystem
 {
-    // This class using stored procedures from postgerSQL. Also inherit helper class and interface.
+    // This class using stored procedures from postgerSQL. Also inherit from connection data class and interface.
     public class AdministratorsDAOPGSQL : ConnectionDataInfo, IAdministratorsDAO
     {        
 
         public void Add(Administrators t)
         {
-            var res_sp_add = Run_Sp(m_conn, "sp_add_admin", new NpgsqlParameter[]
+            try
+            {
+                var res_sp_add = Run_Sp(m_conn, "sp_add_admin", new NpgsqlParameter[]
             {
                 new NpgsqlParameter("_admin_name",t.FirstName),
                 new NpgsqlParameter("_admin_surname", t.LastName),
                 new NpgsqlParameter("_admin_level", t.Level),
                 new NpgsqlParameter("_userid", t.UserID)
             });
-            res_sp_add.ForEach(admin => Console.WriteLine($"New administrator: [{admin}] has been added successfully "));
+                res_sp_add.ForEach(admin => Console.WriteLine($"New administrator: [{admin}] has been added successfully "));
+            }
+            catch (Exception ex)
+            {
+                my_logger.Info($"Error: {ex}\nAdminstrator: [{t.ID}, {t.FirstName}, {t.LastName}, {t.Level}] is excited. cannot be added twice");
+            }
+
         }
 
         public Administrators Get(int id)
@@ -70,11 +78,19 @@ namespace AirlineManagementSystem
 
         public void Remove(Administrators t)
         {
-            var res_sp_remove = Run_Sp(m_conn, "sp_remove_admin", new NpgsqlParameter[]
+            try
+            {
+                var res_sp_remove = Run_Sp(m_conn, "sp_remove_admin", new NpgsqlParameter[]
             {
                 new NpgsqlParameter("id",t.ID)
             });
-            Console.WriteLine($"Run_Sp_Remove => {res_sp_remove} was removed successfully");
+                Console.WriteLine($"Run_Sp_Remove => {res_sp_remove} was removed successfully");
+            }
+            catch (Exception ex)
+            {
+                my_logger.Info($"Error: {ex}\nAdminstrator: [{t.ID}, {t.FirstName}, {t.LastName}, {t.Level}] is not excited.");
+            }
+
         }
 
         public void Update(Administrators t)

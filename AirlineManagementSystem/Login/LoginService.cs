@@ -8,9 +8,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+/// <summary>
+/// this is a singletone login class which only checks the username and password
+/// throw the LoginToken class which is type IUser
+/// also it connected to the facades "Business Logic layer"
+/// /// </summary>
 namespace AirlineManagementSystem.Login
 {
-    public class LoginService : ILoginService
+    public class LoginService : ConnectionDataInfo, ILoginService
     {
         private static object singletone_key = new object();
         private static object key = new object();
@@ -39,7 +44,7 @@ namespace AirlineManagementSystem.Login
 
             }
         }
-        private LoginService()
+        public LoginService()
         {
 
         }
@@ -62,7 +67,6 @@ namespace AirlineManagementSystem.Login
                 {
                     if (user.Password == password)
                     {
-                        //need to add logger
                         token = new LoginToken<Administrators>();
                         facadeBase = new LoggedInAdministratorFacade();
                         return true;
@@ -72,7 +76,6 @@ namespace AirlineManagementSystem.Login
             }
             else
             {
-                //need to add logger
                 if (UserAuthentication.IsUserAuthorized(userName, password))
                 {
                     if (user.UserRole == 1)
@@ -127,7 +130,7 @@ namespace AirlineManagementSystem.Login
                     }
                 }
             }
-            //need to add logger if it fails
+            my_logger.Info($"Login Faild\n: username: {userName} password: {password},  Not excited!");
             return false;
         }
     }

@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+/// <summary>
+/// this class is connected to the database, which uses pgsql functions
+/// </summary>
 
 namespace AirlineManagementSystem
 {
@@ -11,13 +14,21 @@ namespace AirlineManagementSystem
     {
         public void Add(AirlineCompany t)
         {
-            var res_sp_add = Run_Sp(m_conn, "sp_add_airline_company", new NpgsqlParameter[]
+            try
+            {
+                var res_sp_add = Run_Sp(m_conn, "sp_add_airline_company", new NpgsqlParameter[]
             {
                 new NpgsqlParameter("_name", t.Name),
                 new NpgsqlParameter("_countryID", t.CountryId),
                 new NpgsqlParameter("_userID", t.UserId)
             });
-            Console.WriteLine($"[{res_sp_add}] airline company has added successfully ");
+                Console.WriteLine($"[{res_sp_add}] airline company has added successfully ");
+            }
+            catch (Exception ex)
+            {
+                my_logger.Info($"Error while adding new airline company: {ex}\nCannot add [{t.Name}, {t.ID}]");
+            }
+            
         }
 
         public AirlineCompany Get(int id)
@@ -78,11 +89,19 @@ namespace AirlineManagementSystem
 
         public void Remove(AirlineCompany t)
         {
-            var res_sp_remove = Run_Sp(m_conn, "sp_remove_airline_company", new NpgsqlParameter[]
+            try
+            {
+                var res_sp_remove = Run_Sp(m_conn, "sp_remove_airline_company", new NpgsqlParameter[]
             {
                 new NpgsqlParameter("a_id",t.ID)
             });
-            Console.WriteLine($"Run_Sp_Remove => {res_sp_remove}\n{t.Name} airline company was removed successfully");
+                Console.WriteLine($"Run_Sp_Remove => {res_sp_remove}\n{t.Name} airline company was removed successfully");
+            }
+            catch (Exception ex)
+            {
+                my_logger.Info($"Error while adding new airline company: {ex}\nCannot add [{t.Name}, {t.ID}]");
+            }
+
         }
 
         public void Update(AirlineCompany t)

@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 /// shows the ability to each different admin level: change, add, or remove. To:
 /// {airline companies, customers, administrators} 
 /// throws different exceptions, whether the admin/ airline/ customer is exsists.
-/// used logger in each time having an error.
 /// </summary>
 namespace AirlineManagementSystem.BusinessLogic_Facades
 {
@@ -25,7 +24,7 @@ namespace AirlineManagementSystem.BusinessLogic_Facades
                 throw new AdminAlreadyExistsException($"Admin is already exists.\n Admin info: {admin.ID} {admin.FirstName} {admin.LastName}");
                 throw new AdminLevelNotQualifiedToCreateException($"Admin level: {admin.Level} not qualified to create new admin");
             }
-            //logger
+            throw new ArgumentNullException();
         }
 
         public void CreateNewAirline(LoginToken<Administrators> token, AirlineCompany airline)
@@ -39,6 +38,7 @@ namespace AirlineManagementSystem.BusinessLogic_Facades
                 throw new AirlineAlreadyExistsException("Airline is already exists.\n Airline info: " +
                                                         $"{airline.ID} {airline.Name}");
             }
+            throw new ArgumentNullException();
         }
 
         public void CreateNewCustomer(LoginToken<Administrators> token, Customer customer)
@@ -52,7 +52,7 @@ namespace AirlineManagementSystem.BusinessLogic_Facades
                 throw new CustomerAlreadyExistsException($"Customer is already exists.\n Admin info: " +
                                                         $"{customer.ID} {customer.FirstName} {customer.LastName} {customer.PhoneNo}");
             }
-            //logger
+            throw new ArgumentNullException();
         }
 
         public IList<Customer> GetAllCustomers(LoginToken<Administrators> token)
@@ -68,16 +68,13 @@ namespace AirlineManagementSystem.BusinessLogic_Facades
         {
             if (token != null)
             {
-                if (token.User.Level > 0 && token.User.Level < 3)
-                {
-                    Console.WriteLine($"you cannot change or remove higher admin level");
-                }
                 if (token.User.Level >= 3 && token.User.Level <= 4)
                 {
                     _adminDAO.Remove(admin);
                 }
+                Console.WriteLine($"you cannot change or remove higher admin level");
             }
-            //logger
+            throw new ArgumentNullException();
         }
 
         public void RemoveAirline(LoginToken<Administrators> token, AirlineCompany airline)
@@ -93,7 +90,7 @@ namespace AirlineManagementSystem.BusinessLogic_Facades
                     _airlineDAO.Remove(airline);
                 }
             }
-            //logger
+            throw new ArgumentNullException();
         }
 
         public void RemoveCustomer(LoginToken<Administrators> token, Customer customer)
@@ -109,23 +106,20 @@ namespace AirlineManagementSystem.BusinessLogic_Facades
                     _customerDAO.Remove(customer);
                 }
             }
-            //logger
+            throw new ArgumentNullException();
         }
 
         public void UpdateAdmin(LoginToken<Administrators> token, Administrators admin)
         {
             if (token != null)
             {
-                if (token.User.Level > 0 && token.User.Level < 3)
-                {
-                    Console.WriteLine($"admin level: {token.User.Level}, don't have the ability to change or update other higher admin level");
-                }
-                if (token.User.Level <= 3 && token.User.Level < 4)
+                if (token.User.Level >= 3 && token.User.Level <= 4)
                 {
                     _adminDAO.Update(admin);
                 }
+                Console.WriteLine($"admin level: {token.User.Level}, don't have the ability to change or update other higher admin level");
             }
-            //logger
+            throw new ArgumentNullException();
         }
 
         public void UpdateAirlineDetails(LoginToken<Administrators> token, AirlineCompany airline)
@@ -137,7 +131,7 @@ namespace AirlineManagementSystem.BusinessLogic_Facades
                     _airlineDAO.Update(airline);
                 }
             }
-            //logger
+            throw new ArgumentNullException();
         }
 
         public void UpdateCustomerDetails(LoginToken<Administrators> token, Customer customer)
@@ -149,6 +143,7 @@ namespace AirlineManagementSystem.BusinessLogic_Facades
                     _customerDAO.Update(customer);
                 }
             }
+            throw new ArgumentNullException();
         }
     }
 }

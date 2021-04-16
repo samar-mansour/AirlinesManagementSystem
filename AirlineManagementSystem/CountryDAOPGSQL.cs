@@ -12,25 +12,33 @@ namespace AirlineManagementSystem
     {
         public void Add(Country t)
         {
-            var res_sp_add = Run_Sp(m_conn, "sp_add_countries", new NpgsqlParameter[]
+            try
             {
+                var res_sp_add = Run_Sp(m_conn, "sp_add_countries", new NpgsqlParameter[]
+                {
                 new NpgsqlParameter("_country_name",t.Name),
                 new NpgsqlParameter("_country_code", t.CodeCountryName)
-            });
-            Console.WriteLine($"{res_sp_add} added successfully!");
+                });
+                Console.WriteLine($"{res_sp_add} added successfully!");
+            }
+            catch (Exception ex)
+            {
+                my_logger.Info($"Error: {ex}\nCountry: [{t.ID}, {t.Name}, {t.CodeCountryName}] excited cannot be added");
+            }
+            
         }
 
         public Country Get(int id)
         {
             Country country = new Country();
-            var res_sp_get = Run_Sp(m_conn, "sp_get_country_by_id", new NpgsqlParameter[]
+            List<Country> countryList = new List<Country>();
+            Flights flight = new Flights();
+            var res_sp_get = Run_Sp(m_conn, "sp_get_flight_by_id", new NpgsqlParameter[]
             {
-                new NpgsqlParameter("c_id", id)
+                new NpgsqlParameter("f_id", id)
             });
-            if (res_sp_get != null)
-            {
-                country.ID = id;
-            }
+            countryList.AddRange((IEnumerable<Country>)res_sp_get);
+            country = (Country)countryList.Select(a => res_sp_get);
             return country;
         }
 
@@ -66,24 +74,40 @@ namespace AirlineManagementSystem
 
         public void Remove(Country t)
         {
-            var res_sp_remove = Run_Sp(m_conn, "sp_remove_country", new NpgsqlParameter[]
+            try
+            {
+                var res_sp_remove = Run_Sp(m_conn, "sp_remove_country", new NpgsqlParameter[]
             {
                 new NpgsqlParameter("id",t.ID)
             });
-            Console.WriteLine($"{res_sp_remove} record has been removed");
+                Console.WriteLine($"{res_sp_remove} record has been removed");
+            }
+            catch (Exception ex)
+            {
+                my_logger.Info($"Error: {ex}\nCountry: [{t.ID}, {t.Name}, {t.CodeCountryName}] not excited, cannot be removed");
+            }
+
         }
 
         public void Update(Country t)
         {
-            Console.Write("Enter user ID to update information: ");
-            int newID = Convert.ToInt32(Console.ReadLine());
-            var res_sp_update = Run_Sp(m_conn, "sp_update_name_code_country", new NpgsqlParameter[]
+            try
             {
+                Console.Write("Enter user ID to update information: ");
+                int newID = Convert.ToInt32(Console.ReadLine());
+                var res_sp_update = Run_Sp(m_conn, "sp_update_name_code_country", new NpgsqlParameter[]
+                {
                 new NpgsqlParameter("_country_code",t.Name),
                 new NpgsqlParameter("_country_name", t.CodeCountryName),
                 new NpgsqlParameter("new_id", newID)
-            });
-            Console.WriteLine($"{res_sp_update} have been updated");
+                });
+                Console.WriteLine($"{res_sp_update} have been updated");
+            }
+            catch (Exception ex)
+            {
+                my_logger.Info($"Error: {ex}\nCountry: [{t.ID}, {t.Name}, {t.CodeCountryName}] not excited, cannot be updated");
+            }
+            
         }
     }
 }

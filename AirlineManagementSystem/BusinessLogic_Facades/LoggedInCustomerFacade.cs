@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 /// 1.availabe flights 
 /// 2.purchese ticket
 /// 3.cancel ticket
-/// creating new exception
+/// creating new exceptions
 /// </summary>
 namespace AirlineManagementSystem.BusinessLogic_Facades
 {
@@ -23,9 +23,9 @@ namespace AirlineManagementSystem.BusinessLogic_Facades
                 {
                     _ticketDAO.Remove(ticket);
                 }
-                throw new CustomerNotFoundException($"Ticket not exist nor Customer: [ticket not found:{ticket.ID}," +
+                throw new CustomerNotFoundException($"Ticket not exist nor Customer: [ticket not found: {ticket.ID}");
             }
-            //logger
+            throw new ArgumentNullException();
         }
 
         public IList<Flights> GetAllMyFlights(LoginToken<Customer> token)
@@ -48,7 +48,7 @@ namespace AirlineManagementSystem.BusinessLogic_Facades
             Tickets ticket = new Tickets();
             if (token != null)
             {
-                if (!(token.User.ID).Equals(ticket.CustomerID) && (ticket.FlightID).Equals(flight.ID) && flight.RemainingTickets > 0)
+                if (!(token.User.ID).Equals(ticket.CustomerID) && (ticket.FlightID).Equals(flight.ID) && flight.RemainingTickets <= 0)
                 {
                     _flightDAO.Add(flight);
                     flight.RemainingTickets--;

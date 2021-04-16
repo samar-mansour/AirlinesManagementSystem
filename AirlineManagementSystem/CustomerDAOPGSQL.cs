@@ -7,20 +7,28 @@ using System.Threading.Tasks;
 
 namespace AirlineManagementSystem
 {
-    public class CustomerDAO : ConnectionDataInfo, ICustomerDAO
+    public class CustomerDAOPGSQLPGSQL : ConnectionDataInfo, ICustomerDAO
     {
         public void Add(Customer t)
         {
-            var res_sp_add = Run_Sp(m_conn, "sp_add_customers", new NpgsqlParameter[]
+            try
             {
+                var res_sp_add = Run_Sp(m_conn, "sp_add_customers", new NpgsqlParameter[]
+                {
                 new NpgsqlParameter("_firstName", t.FirstName),
                 new NpgsqlParameter("_lastName", t.LastName),
                 new NpgsqlParameter("_address", t.Address),
                 new NpgsqlParameter("_phone", t.PhoneNo),
                 new NpgsqlParameter("_creditCard", t.CreditCardNo),
                 new NpgsqlParameter("_userId", t.UserId)
-            });
-            Console.WriteLine($"Added new customer");
+                });
+                Console.WriteLine($"Added new customer");
+            }
+            catch (Exception ex)
+            {
+                my_logger.Info($"Customer [{t.ID}, {t.FirstName}, {t.LastName}] cannot be added twice. {ex}");
+            }
+            
         }
 
         public Customer Get(int id)
@@ -77,7 +85,7 @@ namespace AirlineManagementSystem
             {
                 new NpgsqlParameter("_id",t.ID)
             });
-            Console.WriteLine($"Run_Sp_Remove => {res_sp_remove}\n{t.FirstName} customer was removed successfully");
+            Console.WriteLine($"Run_Sp_Remove => {res_sp_remove}\n{t.FirstName} customer has removed successfully");
         }
 
         public void Update(Customer t)

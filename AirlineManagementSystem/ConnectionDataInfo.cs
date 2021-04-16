@@ -12,9 +12,8 @@ namespace AirlineManagementSystem
     public abstract class ConnectionDataInfo
     {
         public string m_conn = AppConfigFile.GetInstance().ConnectionString;
+        public static readonly log4net.ILog my_logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        //Log not working --> giving argument null exception!!!!!!
-        ///private static readonly ILogger my_logger;
 
         public static bool TestConnection(string conn)
         {
@@ -26,10 +25,10 @@ namespace AirlineManagementSystem
                     return true;
                 }
             }
-            catch (Exception)// ex)
+            catch (Exception ex)
             {
-                //my_logger.LogDebug($"Failed! can connect to database: {ex}");
-                //my_logger.Log(LogLevel.Critical, "Test Connection DB: {conn} Failed", conn);
+                my_logger.Error($"Failed! can connect to database: {ex}");
+                my_logger.Fatal($"Test Connection DB: {conn} Failed");
                 return false;
             }
         }
@@ -63,11 +62,11 @@ namespace AirlineManagementSystem
                     }
                 }
             }
-            catch (Exception)//ex
+            catch (Exception ex)
             {
-                //my_logger.LogError($"Failed to {sp_name} into/from database. Error : {ex}");
-                //my_logger.LogDebug($"Stored procedure name: [{sp_name}]");
-                //my_logger.Log(LogLevel.Critical, "Stored Procedure DB: {sp_name} Failed", sp_name);
+                my_logger.Fatal($"Failed to get: {sp_name} into/from database. Error : {ex}");
+                my_logger.Debug($"Stored procedure name: [{sp_name}]");
+                my_logger.Error($"Stored Procedure DB: {sp_name} Failed");
                 Console.WriteLine($"Function {sp_name} failed. parameters: {string.Join(",", parameters.Select(_ => _.ParameterName + " : " + _.Value))}");
             }
             return values;

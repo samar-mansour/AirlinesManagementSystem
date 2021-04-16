@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 /// <summary>
 /// class that gives the airline companies ability to change setting and flight info
 /// create new exceptions
-/// i use logger in each function
 /// </summary>
 namespace AirlineManagementSystem.BusinessLogic_Facades
 {
@@ -23,24 +22,24 @@ namespace AirlineManagementSystem.BusinessLogic_Facades
                 }
                 throw new FlightNotExistsException($"Flight not exists: {token.User.ID}");
             }
-            //logger
+            throw new ArgumentNullException();
         }
 
         public void ChangeMyPassword(LoginToken<AirlineCompany> token, string oldPassword, string newPassword)
         {
-            Users users = new Users();
+            Users user = new Users();
             if (token != null)
             {
-                if ((token.User.UserId).Equals(users.ID))
+                if ((token.User.UserId).Equals(user.ID))
                 {
-                    if (users.Password == oldPassword)
+                    if (user.Password == oldPassword)
                     {
-                        users.Password = newPassword;
-                        _userDAO.Update(users);
+                        user.Password = newPassword;
+                        _userDAO.Update(user);
                     };
                 }
             }
-            //logger
+            throw new ArgumentNullException();
         }
 
         public void CreateFlight(LoginToken<AirlineCompany> token, Flights flight)
@@ -53,6 +52,7 @@ namespace AirlineManagementSystem.BusinessLogic_Facades
                 }
                 throw new FlightAlreadyExistsException($"Cannot create the flight: {flight.ID}. Flight is already exists");
             }
+            throw new ArgumentNullException();
         }
 
         public IList<Tickets> GetAllFlights(LoginToken<AirlineCompany> token)
@@ -68,7 +68,7 @@ namespace AirlineManagementSystem.BusinessLogic_Facades
             return null;
         }
 
-        //is it an typo error!  so i guess it's get by id 
+        
         public IList<Tickets> GetAllTickets(LoginToken<AirlineCompany> token)
         {
             List<Tickets> tickets = new List<Tickets>();
@@ -90,6 +90,7 @@ namespace AirlineManagementSystem.BusinessLogic_Facades
             {
                 _airlineDAO.Update(airline);
             }
+            throw new ArgumentNullException();
         }
 
         public void UpdateFlight(LoginToken<AirlineCompany> token, Flights flight)
@@ -101,6 +102,7 @@ namespace AirlineManagementSystem.BusinessLogic_Facades
                     _flightDAO.Update(flight);
                 }
             }
+            throw new ArgumentNullException();
         }
     }
 }
